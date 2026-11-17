@@ -1,6 +1,6 @@
 # Sphenic Number Explorer
 
-A JavaFX application for [Sphenic Number Task.md](Sphenic%20Number%20Task.md). It checks every integer from 1 through an inclusive upper limit using multiple threads, displays each thread's progress, and lists the sphenic numbers in ascending order.
+A JavaFX application that checks every integer from 1 through an inclusive upper limit using multiple threads, displays each thread's progress, and lists the sphenic numbers in ascending order.
 
 A sphenic number is the product of exactly three distinct primes, each appearing once. For example, `30 = 2 × 3 × 5` qualifies; `60 = 2² × 3 × 5` does not.
 
