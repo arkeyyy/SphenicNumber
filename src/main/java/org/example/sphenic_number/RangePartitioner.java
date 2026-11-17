@@ -3,14 +3,13 @@ package org.example.sphenic_number;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Assigns contiguous ranges with increasing workload weights. */
 public final class RangePartitioner {
     private RangePartitioner() {
     }
 
     public static List<NumberRange> partition(int num, int cnt) {
         if (num < 1 || cnt < 1 || cnt > num) {
-            throw new IllegalArgumentException("Use a positive upper limit and between 1 and num threads.");
+            throw new IllegalArgumentException("Invalid upper limit or thread count.");
         }
 
         int[] sizes = new int[cnt];
@@ -28,7 +27,6 @@ public final class RangePartitioner {
             sizes[index]++;
         }
 
-        // Equal workloads are unavoidable for one worker or one value per worker.
         if (cnt > 1 && num > cnt && sizes[0] == sizes[cnt - 1]) {
             sizes[0]--;
             sizes[cnt - 1]++;

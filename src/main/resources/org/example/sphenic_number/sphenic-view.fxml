@@ -19,11 +19,7 @@
         <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
     </padding>
 
-    <VBox spacing="5.0">
-        <Label text="Sphenic Number Explorer" styleClass="app-title"/>
-        <Label text="Find numbers that are the product of exactly three distinct primes. For example, 30 = 2 × 3 × 5."
-               styleClass="subtitle" wrapText="true"/>
-    </VBox>
+    <Label text="Sphenic Number Explorer" styleClass="app-title"/>
 
     <VBox spacing="8.0" styleClass="input-panel">
         <GridPane hgap="12.0" vgap="6.0">
@@ -33,9 +29,9 @@
                 <ColumnConstraints minWidth="84.0" prefWidth="84.0"/>
                 <ColumnConstraints minWidth="84.0" prefWidth="84.0"/>
             </columnConstraints>
-            <TextField fx:id="numField" text="100" promptText="e.g. 1000000"
+            <TextField fx:id="numField" text="100"
                        accessibleText="Upper limit" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="cntField" text="3" promptText="e.g. 3"
+            <TextField fx:id="cntField" text="3"
                        accessibleText="Number of threads" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Label text="Upper limit" labelFor="$numField" styleClass="field-label"
                    GridPane.columnIndex="0" GridPane.rowIndex="0"/>
@@ -48,8 +44,6 @@
                     maxWidth="Infinity" disable="true"
                     GridPane.columnIndex="3" GridPane.rowIndex="1"/>
         </GridPane>
-        <Label text="Whole numbers only · Upper limit: 1–10,000,000 · Threads: 1–64, no more than the upper limit"
-               styleClass="helper-text" wrapText="true"/>
         <Label fx:id="errorLabel" visible="false" managed="false" wrapText="true"
                styleClass="error-message"/>
     </VBox>
@@ -58,8 +52,6 @@
         <items>
             <VBox spacing="10.0" minWidth="270.0" minHeight="0.0" styleClass="workspace-panel">
                 <Label text="Thread progress" styleClass="section-title"/>
-                <Label text="Each thread checks its own range. Unequal workloads make progress easier to compare."
-                       wrapText="true" minHeight="-Infinity" styleClass="helper-text"/>
                 <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
                             minHeight="0.0" styleClass="worker-scroll" VBox.vgrow="ALWAYS">
                     <content>
@@ -79,17 +71,17 @@
                         <Label fx:id="nonSphenicCountLabel" text="—" styleClass="summary-count"/>
                     </VBox>
                 </HBox>
-                <Label fx:id="resultsHintLabel" text="Run a search to see the results."
+                <Label fx:id="resultsHintLabel" visible="false" managed="false"
                        wrapText="true" minHeight="-Infinity" styleClass="helper-text"/>
                 <ListView fx:id="matchesList" minHeight="0.0" prefHeight="240.0" fixedCellSize="30.0"
                           accessibleText="Sphenic numbers in ascending order" VBox.vgrow="ALWAYS">
                     <placeholder>
-                        <Label text="Results will appear here." wrapText="true" styleClass="empty-message"/>
+                        <Label text="No results yet" wrapText="true" styleClass="empty-message"/>
                     </placeholder>
                 </ListView>
             </VBox>
         </items>
     </SplitPane>
 
-    <Label fx:id="statusLabel" text="Ready to start." wrapText="true" styleClass="run-status"/>
+    <Label fx:id="statusLabel" text="Ready" wrapText="true" styleClass="run-status"/>
 </VBox>

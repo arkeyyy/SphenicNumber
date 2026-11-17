@@ -24,7 +24,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/** Owns run state on the JavaFX Application Thread; scanners only own private results. */
 public class SphenicController {
     @FXML private TextField numField;
     @FXML private TextField cntField;
@@ -45,6 +44,8 @@ public class SphenicController {
 
     @FXML
     private void initialize() {
+        resultsHintLabel.visibleProperty().bind(resultsHintLabel.textProperty().isNotEmpty());
+        resultsHintLabel.managedProperty().bind(resultsHintLabel.visibleProperty());
         matchesList.setPlaceholder(new Label("No results yet"));
         matchesList.setFixedCellSize(32);
         matchesList.setCellFactory(list -> new ListCell<>() {
@@ -82,7 +83,7 @@ public class SphenicController {
         sphenicCountLabel.setText("—");
         nonSphenicCountLabel.setText("—");
         resultsTitleLabel.setText("Sphenic numbers");
-        resultsHintLabel.setText("Results appear after all threads finish.");
+        resultsHintLabel.setText("Range 1–" + numbers.format(parameters.num()));
         statusLabel.setText("Checking 1–" + numbers.format(parameters.num()) + " with "
                 + parameters.cnt() + (parameters.cnt() == 1 ? " thread…" : " threads…"));
         setRunning(true);
@@ -166,7 +167,6 @@ public class SphenicController {
 
     private void aggregate(RunState run) {
         statusLabel.setText("All threads finished. Preparing results…");
-        // Snapshot on the FX thread; the aggregation task receives immutable input.
         List<WorkerResult> results = List.copyOf(run.results);
         Task<List<Integer>> task = new Task<>() {
             @Override
@@ -177,7 +177,6 @@ public class SphenicController {
                     if (isCancelled()) {
                         throw new CancellationException();
                     }
-                    // Ranges and their matches are already ordered; no global sort is needed.
                     matches.addAll(result.matches());
                 }
                 return matches;
@@ -226,7 +225,6 @@ public class SphenicController {
         if (currentRun != run) {
             return;
         }
-        // Invalidate callbacks before cancellation triggers any task events.
         currentRun = null;
         run.cancel();
         for (WorkerView view : run.views) {
@@ -235,7 +233,7 @@ public class SphenicController {
             }
         }
         matchesList.setPlaceholder(new Label("Search cancelled"));
-        resultsHintLabel.setText("No final totals. Adjust the inputs or start again.");
+        resultsHintLabel.setText("No final totals.");
         statusLabel.setText(message);
         setRunning(false);
     }
@@ -246,12 +244,10 @@ public class SphenicController {
         }
         cancelRun(run, "Search failed.");
         matchesList.setPlaceholder(new Label("Search could not finish"));
-        showError("The search could not finish. Try a smaller upper limit or fewer threads.");
-        // Keep diagnostic details available without exposing stack traces in the interface.
+        showError("The search could not finish.");
         exception.printStackTrace(System.err);
     }
 
-    /** Called on the FX thread from the window close handler and Application.stop(). */
     public void shutdown() {
         closed = true;
         if (currentRun != null) {

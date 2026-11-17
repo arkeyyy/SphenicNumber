@@ -16,11 +16,6 @@
     -fx-font-weight: bold;
 }
 
-.subtitle {
-    -fx-text-fill: #42536b;
-    -fx-font-size: 13px;
-}
-
 .input-panel {
     -fx-background-color: white;
     -fx-background-radius: 10px;

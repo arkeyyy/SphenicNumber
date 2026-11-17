@@ -1,11 +1,9 @@
 package org.example.sphenic_number;
 
-/** Number-theory operations independent of the user interface. */
 public final class SphenicMath {
     private SphenicMath() {
     }
 
-    /** Returns whether {@code number} is the product of exactly three distinct primes. */
     public static boolean isSphenic(int number) {
         if (number < 30) {
             return false;
@@ -13,7 +11,6 @@ public final class SphenicMath {
 
         int remaining = number;
         int primeCount = 0;
-        // Division avoids overflowing divisor * divisor for large input values.
         for (int divisor = 2; divisor <= remaining / divisor;
              divisor = divisor == 2 ? 3 : divisor + 2) {
             if (remaining % divisor != 0) {
@@ -22,7 +19,7 @@ public final class SphenicMath {
 
             remaining /= divisor;
             if (remaining % divisor == 0) {
-                return false; // Any repeated prime disqualifies the number.
+                return false;
             }
             primeCount++;
             if (primeCount > 3) {

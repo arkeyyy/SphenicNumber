@@ -34,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-/** Exercises the loaded FXML and real button actions without a UI automation dependency. */
 class SphenicControllerTest {
     private static final List<Integer> SAMPLE = List.of(30, 42, 66, 70, 78);
     private View view;
@@ -168,7 +167,6 @@ class SphenicControllerTest {
             assertEquals("—", view.label("sphenicCountLabel").getText());
             assertEquals("—", view.label("nonSphenicCountLabel").getText());
 
-            // Start immediately, before queued completion/cancellation events can be handled.
             setInputsAndStart("100", "3");
             return null;
         });

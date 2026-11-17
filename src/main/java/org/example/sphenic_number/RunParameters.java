@@ -2,7 +2,6 @@ package org.example.sphenic_number;
 
 import java.util.Locale;
 
-/** Validated input and the application limits used by both the GUI and tests. */
 public record RunParameters(int num, int cnt) {
     public static final int MAX_NUM = 10_000_000;
     public static final int MAX_THREADS = 64;
@@ -11,7 +10,7 @@ public record RunParameters(int num, int cnt) {
         validateBounds(num, MAX_NUM, "Upper limit");
         validateBounds(cnt, MAX_THREADS, "Number of threads");
         if (cnt > num) {
-            throw new IllegalArgumentException("Number of threads must not exceed the upper limit.");
+            throw new IllegalArgumentException("Number of threads exceeds the upper limit.");
         }
     }
 
@@ -24,10 +23,10 @@ public record RunParameters(int num, int cnt) {
     private static int parsePositiveInteger(String text, int maximum, String label) {
         String trimmed = text == null ? "" : text.strip();
         if (trimmed.isEmpty()) {
-            throw new IllegalArgumentException("Enter a value for " + label.toLowerCase(Locale.ROOT) + ".");
+            throw new IllegalArgumentException(label + " is required.");
         }
         if (!trimmed.matches("[0-9]+")) {
-            throw new IllegalArgumentException(label + " must be a positive whole number using digits only.");
+            throw new IllegalArgumentException(label + " is not a positive whole number.");
         }
         try {
             int value = Integer.parseInt(trimmed);
@@ -45,6 +44,6 @@ public record RunParameters(int num, int cnt) {
     }
 
     private static String boundsMessage(int maximum, String label) {
-        return String.format(Locale.ROOT, "%s must be between 1 and %,d.", label, maximum);
+        return String.format(Locale.ROOT, "%s is outside the supported range (1–%,d).", label, maximum);
     }
 }
