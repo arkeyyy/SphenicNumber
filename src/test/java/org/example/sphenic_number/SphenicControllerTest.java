@@ -3,6 +3,7 @@ package org.example.sphenic_number;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,7 +14,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.TilePane;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -58,7 +59,7 @@ class SphenicControllerTest {
         view = onFx(() -> {
             FXMLLoader loader = new FXMLLoader(SphenicApplication.class.getResource("sphenic-view.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 960, 720);
+            Scene scene = new Scene(root, 760, 640);
             root.applyCss();
             root.layout();
             return new View(root, scene, loader.getController(), new HashMap<>(loader.getNamespace()));
@@ -197,12 +198,13 @@ class SphenicControllerTest {
     }
 
     @Test
-    void minimumAndDefaultLayoutsKeepControlsAndManyWorkerRowsWithinWidth() throws Exception {
+    void minimumAndDefaultLayoutsKeepTheThreadGridAboveCompactResults() throws Exception {
         start("1000", "64");
         awaitCompletion();
         onFx(() -> {
             assertEquals(64, view.workers().getChildren().size());
-            for (double[] size : new double[][]{{744, 520}, {960, 720}}) {
+            assertEquals(Orientation.HORIZONTAL, view.matches().getOrientation());
+            for (double[] size : new double[][]{{584, 610}, {760, 640}}) {
                 ((Region) view.root()).resize(size[0], size[1]);
                 view.root().applyCss();
                 view.root().layout();
@@ -214,12 +216,31 @@ class SphenicControllerTest {
                 ScrollPane scroll = (ScrollPane) view.root().lookup(".worker-scroll");
                 assertTrue(scroll.getViewportBounds().getWidth() > 0);
                 assertTrue(view.workers().getWidth() <= scroll.getViewportBounds().getWidth() + 1,
-                        "Worker content must fit the scroll viewport width");
+                        "Worker content exceeds the scroll viewport width");
                 assertTrue(view.workers().getHeight() > scroll.getViewportBounds().getHeight(),
-                        "Many worker rows should scroll vertically");
+                        "Worker rows do not extend beyond the vertical viewport");
+                Bounds progressBounds = scroll.localToScene(scroll.getLayoutBounds());
+                Bounds resultsBounds = view.matches().localToScene(view.matches().getLayoutBounds());
+                for (String id : List.of("numField", "cntField", "startButton", "cancelButton", "statusLabel")) {
+                    Node control = view.node(id);
+                    assertTrue(control.localToScene(control.getLayoutBounds()).getMaxY()
+                                    <= progressBounds.getMinY(),
+                            "Input controls and status are above the thread grid");
+                }
+                assertTrue(progressBounds.getMaxY() <= resultsBounds.getMinY(),
+                        "The results area is below the thread grid");
+                assertTrue(resultsBounds.getMaxY() <= view.label("sphenicCountLabel")
+                                .localToScene(view.label("sphenicCountLabel").getLayoutBounds()).getMinY(),
+                        "Summary counts are below the results area");
+                Bounds firstTile = view.workers().getChildren().get(0).getBoundsInParent();
+                Bounds secondTile = view.workers().getChildren().get(1).getBoundsInParent();
+                assertEquals(firstTile.getMinY(), secondTile.getMinY(), 1,
+                        "Multiple worker tiles share the first row");
+                assertTrue(secondTile.getMinX() >= firstTile.getMaxX(),
+                        "Worker tiles form columns without overlap");
                 for (Node row : view.workers().getChildren()) {
                     assertTrue(row.getBoundsInParent().getMaxX() <= view.workers().getWidth() + 1,
-                            "Worker row must not extend beyond its container");
+                            "Worker row extends beyond its container");
                     assertWithinWidth(row, size[0]);
                 }
             }
@@ -307,8 +328,8 @@ class SphenicControllerTest {
             return (Label) namespace.get(id);
         }
 
-        VBox workers() {
-            return (VBox) namespace.get("workerRows");
+        TilePane workers() {
+            return (TilePane) namespace.get("workerRows");
         }
 
         @SuppressWarnings("unchecked")

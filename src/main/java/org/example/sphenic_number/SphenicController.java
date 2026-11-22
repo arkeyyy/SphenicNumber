@@ -10,8 +10,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 import java.text.NumberFormat;
@@ -31,7 +30,7 @@ public class SphenicController {
     @FXML private Button cancelButton;
     @FXML private Label errorLabel;
     @FXML private Label statusLabel;
-    @FXML private VBox workerRows;
+    @FXML private TilePane workerRows;
     @FXML private ListView<Integer> matchesList;
     @FXML private Label sphenicCountLabel;
     @FXML private Label nonSphenicCountLabel;
@@ -47,7 +46,6 @@ public class SphenicController {
         resultsHintLabel.visibleProperty().bind(resultsHintLabel.textProperty().isNotEmpty());
         resultsHintLabel.managedProperty().bind(resultsHintLabel.visibleProperty());
         matchesList.setPlaceholder(new Label("No results yet"));
-        matchesList.setFixedCellSize(32);
         matchesList.setCellFactory(list -> new ListCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
@@ -133,8 +131,6 @@ public class SphenicController {
             if (currentRun == run && !view.finished) {
                 double progress = Math.max(0, Math.min(1, newValue.doubleValue()));
                 view.progress.setProgress(progress);
-                view.status.setText("Checked " + numbers.format(Math.round(progress * range.size()))
-                        + " of " + numbers.format(range.size()));
             }
         });
         task.setOnSucceeded(event -> {
@@ -143,8 +139,7 @@ public class SphenicController {
             }
             view.finished = true;
             view.progress.setProgress(1);
-            view.status.setText("Finished · " + numbers.format(task.getValue().matches().size())
-                    + " found");
+            view.status.setText("Done");
             run.results.set(index, task.getValue());
             run.completed++;
             if (run.completed == run.parameters.cnt()) {
@@ -277,31 +272,35 @@ public class SphenicController {
     }
 
     private final class WorkerView {
-        private final HBox row;
+        private final VBox row;
         private final ProgressIndicator progress = new ProgressIndicator(0);
         private final Label status = new Label("Waiting");
         private boolean finished;
 
         private WorkerView(int index, NumberRange range) {
             progress.getStyleClass().add("worker-progress");
-            progress.setMinSize(58, 58);
-            progress.setPrefSize(58, 58);
-            progress.setMaxSize(58, 58);
+            progress.setMinSize(48, 48);
+            progress.setPrefSize(48, 48);
+            progress.setMaxSize(48, 48);
             progress.setAccessibleText("Thread " + index + " progress");
             Label title = new Label("Thread " + index);
             title.getStyleClass().add("worker-title");
-            Label rangeLabel = new Label(numbers.format(range.startInclusive()) + "–"
-                    + numbers.format(range.endInclusive()) + " · " + numbers.format(range.size())
-                    + (range.size() == 1 ? " number" : " numbers"));
+            Label rangeLabel = new Label(numbers.format(range.startInclusive()) + " to "
+                    + numbers.format(range.endInclusive()));
             rangeLabel.getStyleClass().add("worker-range");
             rangeLabel.setWrapText(true);
+            rangeLabel.setMaxWidth(120);
+            rangeLabel.setAlignment(Pos.CENTER);
+            Label sizeLabel = new Label(numbers.format(range.size())
+                    + (range.size() == 1 ? " number" : " numbers"));
+            sizeLabel.getStyleClass().add("worker-range");
             status.getStyleClass().add("worker-status");
             status.setWrapText(true);
-            VBox text = new VBox(5, title, rangeLabel, status);
-            text.setMinWidth(0);
-            HBox.setHgrow(text, Priority.ALWAYS);
-            row = new HBox(16, progress, text);
-            row.setAlignment(Pos.CENTER_LEFT);
+            status.setMaxWidth(120);
+            status.setAlignment(Pos.CENTER);
+            row = new VBox(4, title, progress, rangeLabel, sizeLabel, status);
+            row.setPrefWidth(120);
+            row.setAlignment(Pos.CENTER);
             row.getStyleClass().add("worker-row");
         }
     }

@@ -1,236 +1,41 @@
-.app-root {
-    -fx-font-family: "System";
-    -fx-font-size: 13px;
-    -fx-background-color: #f3f6fb;
-    -fx-accent: #2459c4;
-    -fx-focus-color: #2459c4;
-    -fx-faint-focus-color: #2459c430;
-}
-
-.label {
-    -fx-text-fill: #17243b;
-}
-
 .app-title {
-    -fx-font-size: 25px;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-}
-
-.input-panel {
-    -fx-background-color: white;
-    -fx-background-radius: 10px;
-    -fx-border-color: #dce3ee;
-    -fx-border-radius: 10px;
-    -fx-padding: 14px;
-}
-
-.field-label {
-    -fx-font-weight: bold;
-}
-
-.helper-text {
-    -fx-font-size: 12px;
-    -fx-text-fill: #4c5d73;
-}
-
-.text-field {
-    -fx-pref-height: 36px;
-    -fx-background-color: white;
-    -fx-background-radius: 5px;
-    -fx-border-color: #aab7c9;
-    -fx-border-radius: 5px;
-    -fx-padding: 7px 10px;
-    -fx-prompt-text-fill: #637187;
-    -fx-text-fill: #17243b;
-}
-
-.text-field:focused {
-    -fx-border-color: #2459c4;
-    -fx-effect: dropshadow(gaussian, #2459c440, 4, 0.4, 0, 0);
-}
-
-.text-field:error {
-    -fx-border-color: #b42318;
-}
-
-.button {
-    -fx-pref-height: 36px;
-    -fx-padding: 7px 14px;
-    -fx-background-color: #ffffff;
-    -fx-background-radius: 5px;
-    -fx-border-color: #aab7c9;
-    -fx-border-radius: 5px;
-    -fx-text-fill: #24344c;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
-
-.button:hover {
-    -fx-background-color: #edf2fa;
-}
-
-.button:pressed {
-    -fx-background-color: #e0e8f5;
-}
-
-.button:focused {
-    -fx-border-color: #2459c4;
-    -fx-effect: dropshadow(gaussian, #2459c455, 5, 0.4, 0, 0);
-}
-
-.primary-button {
-    -fx-background-color: #2459c4;
-    -fx-border-color: #2459c4;
-    -fx-text-fill: white;
-}
-
-.primary-button:hover {
-    -fx-background-color: #1c4cab;
-    -fx-border-color: #1c4cab;
-}
-
-.primary-button:pressed {
-    -fx-background-color: #163d8c;
-    -fx-border-color: #163d8c;
-}
-
-.button:disabled, .text-field:disabled {
-    -fx-opacity: 0.55;
-    -fx-cursor: default;
-}
-
-.error-message {
-    -fx-text-fill: #a32118;
-    -fx-background-color: #fff1f0;
-    -fx-background-radius: 5px;
-    -fx-padding: 8px 10px;
-}
-
-.workspace {
-    -fx-background-color: transparent;
-    -fx-padding: 0;
-    -fx-box-border: transparent;
-}
-
-.workspace > .split-pane-divider {
-    -fx-background-color: transparent;
-    -fx-padding: 0 6px;
-}
-
-.workspace > .split-pane-divider:hover {
-    -fx-background-color: #dce3ee;
-}
-
-.workspace-panel {
-    -fx-background-color: white;
-    -fx-background-radius: 10px;
-    -fx-border-color: #dce3ee;
-    -fx-border-radius: 10px;
-    -fx-padding: 16px;
 }
 
 .section-title {
-    -fx-font-size: 17px;
     -fx-font-weight: bold;
 }
 
-.worker-scroll, .worker-scroll > .viewport {
-    -fx-background-color: transparent;
-}
-
-.worker-scroll {
-    -fx-padding: 0;
-    -fx-background-insets: 0;
+.error-message {
+    -fx-text-fill: #b00020;
 }
 
 .worker-row {
-    -fx-background-color: #f5f8fd;
-    -fx-background-radius: 7px;
-    -fx-border-color: #e0e7f1;
-    -fx-border-radius: 7px;
-    -fx-padding: 12px;
-    -fx-spacing: 12px;
-    -fx-alignment: center-left;
-}
-
-.worker-title {
-    -fx-font-weight: bold;
-    -fx-font-size: 13px;
+    -fx-alignment: center;
+    -fx-spacing: 4px;
+    -fx-pref-width: 120px;
 }
 
 .worker-range, .worker-status {
-    -fx-font-size: 12px;
-    -fx-text-fill: #4c5d73;
+    -fx-text-alignment: center;
 }
 
-.worker-status:error {
-    -fx-text-fill: #a32118;
+.results-list .list-cell {
+    -fx-alignment: center-left;
+    -fx-padding: 6px;
 }
 
-.worker-progress {
-    -fx-pref-width: 58px;
-    -fx-pref-height: 58px;
-    -fx-min-width: 58px;
-    -fx-min-height: 58px;
-    -fx-max-width: 58px;
-    -fx-max-height: 58px;
-    -fx-progress-color: #2459c4;
+.results-list .list-cell:empty,
+.results-list .list-cell:filled {
+    -fx-background-color: -fx-control-inner-background;
 }
 
-.summary-tile {
-    -fx-background-color: #f1f5fc;
-    -fx-background-radius: 6px;
-    -fx-padding: 10px 12px;
+.results-list .list-cell:filled:selected {
+    -fx-background-color: -fx-selection-bar-non-focused;
+    -fx-text-fill: -fx-selection-bar-text;
 }
 
-.summary-count {
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-}
-
-.list-view {
-    -fx-background-color: white;
-    -fx-background-radius: 5px;
-    -fx-border-color: #dce3ee;
-    -fx-border-radius: 5px;
-    -fx-padding: 1px;
-}
-
-.list-view:focused {
-    -fx-border-color: #2459c4;
-}
-
-.list-cell {
-    -fx-background-color: white;
-    -fx-text-fill: #17243b;
-    -fx-padding: 5px 12px;
-}
-
-.list-cell:filled:odd {
-    -fx-background-color: #f6f8fc;
-}
-
-.list-cell:filled:selected {
-    -fx-background-color: #dce8ff;
-    -fx-text-fill: #123874;
-}
-
-.list-cell:filled:selected:focused {
-    -fx-border-color: #2459c4;
-    -fx-border-insets: 0;
-}
-
-.empty-message {
-    -fx-text-fill: #637187;
-    -fx-padding: 16px;
-    -fx-alignment: center;
-}
-
-.run-status {
-    -fx-font-size: 12px;
-    -fx-text-fill: #42536b;
-}
-
-.run-status:error {
-    -fx-text-fill: #a32118;
+.results-list:focused .list-cell:filled:selected {
+    -fx-background-color: -fx-selection-bar;
 }

@@ -5,83 +5,76 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="14.0" styleClass="app-root" stylesheets="@sphenic.css"
+<VBox spacing="10" styleClass="app-root" stylesheets="@sphenic.css"
       xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.example.sphenic_number.SphenicController">
     <padding>
-        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+        <Insets top="16" right="16" bottom="16" left="16"/>
     </padding>
 
-    <Label text="Sphenic Number Explorer" styleClass="app-title"/>
+    <Label text="Sphenic Number" styleClass="app-title"/>
 
-    <VBox spacing="8.0" styleClass="input-panel">
-        <GridPane hgap="12.0" vgap="6.0">
-            <columnConstraints>
-                <ColumnConstraints minWidth="120.0" prefWidth="280.0" hgrow="ALWAYS"/>
-                <ColumnConstraints minWidth="135.0" prefWidth="210.0" hgrow="ALWAYS"/>
-                <ColumnConstraints minWidth="84.0" prefWidth="84.0"/>
-                <ColumnConstraints minWidth="84.0" prefWidth="84.0"/>
-            </columnConstraints>
-            <TextField fx:id="numField" text="100"
-                       accessibleText="Upper limit" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <TextField fx:id="cntField" text="3"
-                       accessibleText="Number of threads" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <Label text="Upper limit" labelFor="$numField" styleClass="field-label"
-                   GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <Label text="Number of threads" labelFor="$cntField" styleClass="field-label"
-                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-            <Button fx:id="startButton" text="Start" onAction="#onStart" defaultButton="true"
-                    maxWidth="Infinity" styleClass="primary-button"
-                    GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-            <Button fx:id="cancelButton" text="Cancel" onAction="#onCancel" cancelButton="true"
-                    maxWidth="Infinity" disable="true"
-                    GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-        </GridPane>
-        <Label fx:id="errorLabel" visible="false" managed="false" wrapText="true"
-               styleClass="error-message"/>
+    <HBox spacing="12" alignment="BOTTOM_LEFT">
+        <VBox spacing="5" minWidth="100" HBox.hgrow="ALWAYS">
+            <Label text="Upper limit (num)" labelFor="${numField}"/>
+            <TextField fx:id="numField" text="100" accessibleText="Upper limit"/>
+        </VBox>
+        <VBox spacing="5" minWidth="120" maxWidth="120">
+            <Label text="Threads (cnt)" labelFor="${cntField}"/>
+            <TextField fx:id="cntField" text="3" prefWidth="120" accessibleText="Number of threads"/>
+        </VBox>
+        <Button fx:id="startButton" text="Start" defaultButton="true" onAction="#onStart" minWidth="80"/>
+        <Button fx:id="cancelButton" text="Stop" cancelButton="true" onAction="#onCancel"
+                disable="true" minWidth="80"/>
+    </HBox>
+
+    <Label fx:id="errorLabel" visible="false" managed="false" wrapText="true"
+           minHeight="-Infinity" styleClass="error-message"/>
+    <Separator/>
+    <Label fx:id="statusLabel" text="Ready." wrapText="true" minHeight="-Infinity"/>
+    <Label text="Thread progress" styleClass="section-title"/>
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefViewportHeight="210"
+                minHeight="140" VBox.vgrow="ALWAYS" styleClass="worker-scroll">
+        <content>
+            <TilePane fx:id="workerRows" hgap="8" vgap="12" prefTileWidth="120">
+                <padding>
+                    <Insets top="8" right="8" bottom="8" left="8"/>
+                </padding>
+            </TilePane>
+        </content>
+    </ScrollPane>
+
+    <HBox spacing="12" alignment="CENTER_LEFT" minHeight="-Infinity">
+        <Label fx:id="resultsTitleLabel" text="Sphenic numbers" labelFor="${matchesList}"
+               styleClass="section-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="resultsHintLabel" visible="false" managed="false" wrapText="true"
+               maxWidth="350"/>
+    </HBox>
+    <ListView fx:id="matchesList" orientation="HORIZONTAL" fixedCellSize="80"
+              minHeight="60" prefHeight="70" maxHeight="70" styleClass="results-list"
+              accessibleText="Sphenic numbers in ascending order">
+        <placeholder>
+            <Label text="No results yet"/>
+        </placeholder>
+    </ListView>
+
+    <VBox spacing="3" minHeight="-Infinity">
+        <HBox spacing="4">
+            <Label text="Sphenic:"/>
+            <Label fx:id="sphenicCountLabel" text="—"/>
+        </HBox>
+        <HBox spacing="4">
+            <Label text="Non-sphenic:"/>
+            <Label fx:id="nonSphenicCountLabel" text="—"/>
+        </HBox>
     </VBox>
-
-    <SplitPane dividerPositions="0.53" styleClass="workspace" minHeight="160.0" VBox.vgrow="ALWAYS">
-        <items>
-            <VBox spacing="10.0" minWidth="270.0" minHeight="0.0" styleClass="workspace-panel">
-                <Label text="Thread progress" styleClass="section-title"/>
-                <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
-                            minHeight="0.0" styleClass="worker-scroll" VBox.vgrow="ALWAYS">
-                    <content>
-                        <VBox fx:id="workerRows" spacing="10.0" fillWidth="true"/>
-                    </content>
-                </ScrollPane>
-            </VBox>
-            <VBox spacing="10.0" minWidth="270.0" minHeight="0.0" styleClass="workspace-panel">
-                <Label fx:id="resultsTitleLabel" text="Sphenic numbers" styleClass="section-title"/>
-                <HBox spacing="10.0">
-                    <VBox spacing="3.0" styleClass="summary-tile" HBox.hgrow="ALWAYS" maxWidth="Infinity">
-                        <Label text="Sphenic" styleClass="helper-text"/>
-                        <Label fx:id="sphenicCountLabel" text="—" styleClass="summary-count"/>
-                    </VBox>
-                    <VBox spacing="3.0" styleClass="summary-tile" HBox.hgrow="ALWAYS" maxWidth="Infinity">
-                        <Label text="Non-sphenic" styleClass="helper-text"/>
-                        <Label fx:id="nonSphenicCountLabel" text="—" styleClass="summary-count"/>
-                    </VBox>
-                </HBox>
-                <Label fx:id="resultsHintLabel" visible="false" managed="false"
-                       wrapText="true" minHeight="-Infinity" styleClass="helper-text"/>
-                <ListView fx:id="matchesList" minHeight="0.0" prefHeight="240.0" fixedCellSize="30.0"
-                          accessibleText="Sphenic numbers in ascending order" VBox.vgrow="ALWAYS">
-                    <placeholder>
-                        <Label text="No results yet" wrapText="true" styleClass="empty-message"/>
-                    </placeholder>
-                </ListView>
-            </VBox>
-        </items>
-    </SplitPane>
-
-    <Label fx:id="statusLabel" text="Ready" wrapText="true" styleClass="run-status"/>
 </VBox>
